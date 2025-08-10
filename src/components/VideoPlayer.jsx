@@ -108,7 +108,7 @@ const VideoPlayer = () => {
 
   useEffect(() => {
     axios
-      .get('http://localhost:4000/videos')
+      .get(`${import.meta.env.VITE_API_BASE_URL}/videos`)
       .then((res) => setVideos(res.data || []))
       .catch(() => setError('Failed to load videos'));
   }, []);
