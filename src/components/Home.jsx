@@ -240,7 +240,7 @@ const Home = () => {
   useEffect(() => {
     const fetchAndEnhanceVideos = async () => {
       try {
-        const res = await axios.get('http://localhost:4000/videos');
+        const res = await axios.get(`${import.meta.env.VITE_API_BASE_URL}/videos`);
         const data = res.data || [];
 
         setEnhancingVideos(true);
@@ -249,7 +249,7 @@ const Home = () => {
         setVideos(enhancedData);
         setFilteredVideos(enhancedData);
       } catch (error) {
-        setError('Check your internet and try again.');
+        setError('Check your internet or the server is down');
       } finally {
         setLoading(false);
         setEnhancingVideos(false);
