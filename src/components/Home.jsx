@@ -240,7 +240,9 @@ const Home = () => {
   useEffect(() => {
     const fetchAndEnhanceVideos = async () => {
       try {
-        const res = await axios.get(`${import.meta.env.VITE_API_BASE_URL}/videos`);
+        // const res = await axios.get(`${import.meta.env.VITE_API_BASE_URL}/videos`);
+        const res = await axios.get('https://filmzone-movie-app-agasobanuye-backend.onrender.com/videos');
+
         const data = res.data || [];
 
         setEnhancingVideos(true);
