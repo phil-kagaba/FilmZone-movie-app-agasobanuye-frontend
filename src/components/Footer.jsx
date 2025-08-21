@@ -1,5 +1,6 @@
 import React from 'react';
 import logo from '../assets/logo.png';
+import { Link } from 'react-router-dom';
 import {
   Facebook, Twitter, Instagram, Youtube, Film
 } from 'lucide-react';
@@ -53,9 +54,10 @@ const Footer = () => {
         <div>
           <h4 className="text-white font-semibold mb-3">Follow Us</h4>
           <div className="flex space-x-4">
+            <a href="https://www.instagram.com/filmzone_____/" className="hover:text-red-500 transition"><Instagram className="w-5 h-5" /></a>
             <a href="#" className="hover:text-red-500 transition"><Facebook className="w-5 h-5" /></a>
             <a href="#" className="hover:text-red-500 transition"><Twitter className="w-5 h-5" /></a>
-            <a href="#" className="hover:text-red-500 transition"><Instagram className="w-5 h-5" /></a>
+           
             <a href="#" className="hover:text-red-500 transition"><Youtube className="w-5 h-5" /></a>
           </div>
         </div>
@@ -68,10 +70,12 @@ const Footer = () => {
           <span>© {new Date().getFullYear()} PhilmZone. All rights reserved.</span>
         </div>
         <div className="space-x-4 text-sm">
-          <a href="#" className="hover:text-red-500 transition">Sitemap</a>
-          <a href="#" className="hover:text-red-500 transition">Legal</a>
-          <a href="#" className="hover:text-red-500 transition">Cookies</a>
-        </div>
+            <Link to="/AdminLoginPage" className="hover:text-red-500 transition">
+              Admin
+            </Link>
+            <a href="/legal" className="hover:text-red-500 transition" aria-label="Legal">Legal</a>
+            <a href="/cookies" className="hover:text-red-500 transition" aria-label="Cookies">Cookies</a>
+          </div>
       </div>
     </footer>
   );

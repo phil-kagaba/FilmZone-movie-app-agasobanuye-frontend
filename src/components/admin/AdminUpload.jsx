@@ -9,7 +9,7 @@ const AdminUpload = () => {
   const [snapshot, setSnapshot] = useState(null);
   const [formData, setFormData] = useState({
     file_title: '',
-    file_descr: '',
+    // file_descr: '',
     fld_id: '',
     cat_id: '',
     tags: '',
@@ -98,31 +98,6 @@ const AdminUpload = () => {
   {/* Main Content */}
   <main className="flex-1 p-8 overflow-y-auto">
     <div className="max-w-3xl mx-auto bg-gray-900 p-6 rounded-2xl shadow-lg space-y-8">
-      {/* Create Folder */}
-      <section>
-        <h2 className="text-xl font-bold text-blue-300 mb-4">📁 Create New Folder</h2>
-        <form onSubmit={handleCreateFolder} className="space-y-4">
-          <input
-            type="text"
-            placeholder="Folder Name"
-            value={newFolderName}
-            onChange={(e) => setNewFolderName(e.target.value)}
-            className="w-full p-3 rounded-lg bg-gray-800 border border-gray-600 focus:ring focus:ring-blue-500"
-            required
-          />
-          <input
-            type="text"
-            placeholder="Parent Folder ID (optional)"
-            value={newFolderParentId}
-            onChange={(e) => setNewFolderParentId(e.target.value)}
-            className="w-full p-3 rounded-lg bg-gray-800 border border-gray-600 focus:ring focus:ring-blue-500"
-          />
-          <button type="submit" className="w-full bg-blue-600 text-white py-3 rounded-lg hover:bg-blue-700 transition">
-            Create Folder
-          </button>
-          {folderMsg && <p className="text-sm text-blue-400 mt-2">{folderMsg}</p>}
-        </form>
-      </section>
 
       {/* Upload Video */}
       <section>
@@ -133,10 +108,10 @@ const AdminUpload = () => {
             <span className="font-semibold">Video File</span>
             <input type="file" onChange={(e) => setVideo(e.target.files[0])} accept="video/*" className="w-full mt-2 p-2 bg-gray-800 border border-gray-600 rounded" required />
           </label>
-          <label className="block">
+          {/* <label className="block">
             <span className="font-semibold">Thumbnail Image</span>
             <input type="file" onChange={(e) => setSnapshot(e.target.files[0])} accept="image/*" className="w-full mt-2 p-2 bg-gray-800 border border-gray-600 rounded" />
-          </label>
+          </label> */}
 
           {/* Preview */}
           {snapshot && (
@@ -150,10 +125,10 @@ const AdminUpload = () => {
           {/* Metadata Inputs */}
           {[
             { name: "file_title", placeholder: "Video Title", required: true },
-            { name: "file_descr", placeholder: "Description" },
-            { name: "fld_id", placeholder: "Folder ID (optional)" },
-            { name: "cat_id", placeholder: "Category ID (optional)" },
-            { name: "tags", placeholder: "Tags (comma separated)" },
+            // { name: "file_descr", placeholder: "Description" },
+            // { name: "fld_id", placeholder: "Folder ID (optional)" },
+            // { name: "cat_id", placeholder: "Category ID (optional)" },
+            // { name: "tags", placeholder: "Tags (comma separated)" },
           ].map(({ name, placeholder, required }) => (
             <input
               key={name}
@@ -199,8 +174,6 @@ const AdminUpload = () => {
       </section>
     </div>
 
-    {/* Footer */}
-    <footer className="mt-10 text-center text-gray-500 text-xs">Server ID: 2121</footer>
   </main>
 </div>
 

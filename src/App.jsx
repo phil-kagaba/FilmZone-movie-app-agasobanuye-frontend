@@ -7,6 +7,7 @@ import VideoPlayer from './components/VideoPlayer';
 import Footer from './components/Footer';
 import MyMovieApis from './components/MyMovieApis';
 import NotFound from './components/NotFound';
+import LoginPage from './components/admin/LoginPage';
 
 function App() {
   return (
@@ -20,6 +21,7 @@ function App() {
             <Route path="/video/:filecode" element={<VideoPlayer />} />
             <Route path="/trailer" element={<MyMovieApis />} />
             <Route path="*" element={<NotFound />} />
+            <Route path='/AdminLoginPage' element= {<LoginPage /> }/>
           </Routes>
         </div>
         <Footer />

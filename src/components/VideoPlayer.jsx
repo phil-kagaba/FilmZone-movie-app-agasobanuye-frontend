@@ -18,6 +18,7 @@ import logo from '../assets/logo.png';
 import Header from './Header';
 import TrailerModal from './TrailerModal';
 
+// Loader while fetching movie
 const LogoLoader = () => (
   <div className="flex flex-col justify-center items-center min-h-screen bg-gray-900">
     <div className="relative w-20 h-20 mb-6">
@@ -35,55 +36,54 @@ const LogoLoader = () => (
   </div>
 );
 
-const VideoCard = ({ video, isActive, onClick }) => {
-  return (
-    <div
-      className={`flex items-center gap-3 sm:gap-4 p-3 rounded-lg cursor-pointer transition-all duration-300 hover:bg-gray-800/50 ${
-        isActive ? 'bg-red-500/20 border border-red-500/30' : 'bg-gray-800/30'
-      }`}
-      onClick={onClick}
-    >
-      <div className="relative w-20 sm:w-24 h-12 sm:h-16 flex-shrink-0 rounded-lg overflow-hidden bg-gray-700">
-        <img
-          src={
-            video.thumbnail ||
-            video.screenshot ||
-            `https://cdn.streamhg.com/snapshots/${video.file_code || video.filecode}.jpg`
-          }
-          alt={video.title || video.filename}
-          className="w-full h-full object-cover"
-          loading="lazy"
-          onError={(e) => {
-            e.target.src = 'https://images.unsplash.com/photo-1489599856026-e27b5e10d4b4?w=200&h=120&fit=crop';
-          }}
-        />
-        {isActive && (
-          <div className="absolute inset-0 bg-red-500/20 flex items-center justify-center">
-            <Play className="h-5 sm:h-6 w-5 sm:w-6 text-white fill-white" />
+// Video card component for sidebar
+const VideoCard = ({ video, isActive, onClick }) => (
+  <div
+    className={`flex items-center gap-3 sm:gap-4 p-3 rounded-lg cursor-pointer transition-all duration-300 hover:bg-gray-800/50 ${
+      isActive ? 'bg-red-500/20 border border-red-500/30' : 'bg-gray-800/30'
+    }`}
+    onClick={onClick}
+  >
+    <div className="relative w-20 sm:w-24 h-12 sm:h-16 flex-shrink-0 rounded-lg overflow-hidden bg-gray-700">
+      <img
+        src={
+          video.thumbnail ||
+          video.screenshot ||
+          `https://cdn.streamhg.com/snapshots/${video.file_code || video.filecode}.jpg`
+        }
+        alt={video.title || video.filename}
+        className="w-full h-full object-cover"
+        loading="lazy"
+        onError={(e) => {
+          e.target.src = 'https://images.unsplash.com/photo-1489599856026-e27b5e10d4b4?w=200&h=120&fit=crop';
+        }}
+      />
+      {isActive && (
+        <div className="absolute inset-0 bg-red-500/20 flex items-center justify-center">
+          <Play className="h-5 sm:h-6 w-5 sm:w-6 text-white fill-white" />
+        </div>
+      )}
+    </div>
+
+    <div className="flex-1 min-w-0">
+      <h3 className={`font-semibold truncate text-sm sm:text-base ${isActive ? 'text-red-400' : 'text-white'}`}>
+        {video.title || video.filename}
+      </h3>
+      <div className="flex items-center space-x-3 mt-1 text-xs sm:text-sm text-gray-400">
+        {video.length && (
+          <div className="flex items-center space-x-1">
+            <Clock className="h-3 w-3" />
+            <span>{video.length}s</span>
           </div>
         )}
-      </div>
-
-      <div className="flex-1 min-w-0">
-        <h3 className={`font-semibold truncate text-sm sm:text-base ${isActive ? 'text-red-400' : 'text-white'}`}>
-          {video.title || video.filename}
-        </h3>
-        <div className="flex items-center space-x-3 mt-1 text-xs sm:text-sm text-gray-400">
-          {video.length && (
-            <div className="flex items-center space-x-1">
-              <Clock className="h-3 w-3" />
-              <span>{video.length}s</span>
-            </div>
-          )}
-          <div className="flex items-center space-x-1">
-            <Star className="h-3 w-3 text-yellow-400 fill-yellow-400" />
-            <span>8.5</span>
-          </div>
+        <div className="flex items-center space-x-1">
+          <Star className="h-3 w-3 text-yellow-400 fill-yellow-400" />
+          <span>8.5</span>
         </div>
       </div>
     </div>
-  );
-};
+  </div>
+);
 
 const VideoPlayer = () => {
   const { filecode } = useParams();
@@ -101,11 +101,23 @@ const VideoPlayer = () => {
   const [loadingTrailer, setLoadingTrailer] = useState(false);
   const [showIframe, setShowIframe] = useState(false);
 
-  // Force scroll to top on page load or filecode change
+  // Comment states
+  const [comments, setComments] = useState([]);
+  const [commentInput, setCommentInput] = useState('');
+  const [nameInput, setNameInput] = useState('');
+
+  // Load comments from localStorage
+  useEffect(() => {
+    const savedComments = localStorage.getItem(`comments-${filecode}`);
+    if (savedComments) setComments(JSON.parse(savedComments));
+  }, [filecode]);
+
+  // Force scroll to top
   useEffect(() => {
     window.scrollTo(0, 0);
   }, [filecode]);
 
+  // Fetch all videos
   useEffect(() => {
     axios
       .get(`${import.meta.env.VITE_API_BASE_URL}/videos`)
@@ -113,6 +125,7 @@ const VideoPlayer = () => {
       .catch(() => setError('Failed to load videos'));
   }, []);
 
+  // Set current video
   useEffect(() => {
     if (videos.length === 0) return;
     const vid = videos.find((v) => v.file_code === filecode || v.filecode === filecode);
@@ -128,45 +141,57 @@ const VideoPlayer = () => {
     setLoading(false);
   }, [filecode, videos]);
 
+  // Fetch TMDB data
   const fetchTMDBData = async (videoData) => {
     try {
       const tmdb = await searchMovieByTitle(videoData.title || videoData.filename);
       setTmdbData(tmdb);
-    } catch (error) {
-      console.error('Error fetching TMDB data:', error);
+    } catch (err) {
+      console.error('Error fetching TMDB data:', err);
     }
   };
 
+  // Watch trailer
   const handleWatchTrailer = async () => {
-    if (!tmdbData?.tmdbId) {
-      alert('Trailer not available for this movie');
-      return;
-    }
-
+    if (!tmdbData?.tmdbId) return alert('Trailer not available for this movie');
     setLoadingTrailer(true);
     try {
       const trailer = await getMovieTrailer(tmdbData.tmdbId);
-      if (trailer) {
-        setTrailerKey(trailer);
-        setShowTrailer(true);
-      } else {
-        alert('No trailer found for this movie');
-      }
-    } catch (error) {
+      if (trailer) setTrailerKey(trailer), setShowTrailer(true);
+      else alert('No trailer found');
+    } catch {
       alert('Failed to load trailer');
     }
     setLoadingTrailer(false);
   };
 
+  // Search handler
   const handleSearch = (term) => {
-    const results = videos.filter((v) => {
-      const title = (v.title || v.filename || '').toLowerCase();
-      return title.includes(term.toLowerCase());
-    });
+    const results = videos.filter((v) => (v.title || v.filename || '').toLowerCase().includes(term.toLowerCase()));
     setSearchResults(results);
   };
 
+  // Add new comment
+  const handleAddComment = (e) => {
+    e.preventDefault();
+    if (!commentInput.trim() || !nameInput.trim()) return;
+
+    const newComment = {
+      id: Date.now(),
+      text: commentInput,
+      user: nameInput,
+      date: new Date().toLocaleString(),
+    };
+
+    const updatedComments = [newComment, ...comments];
+    setComments(updatedComments);
+    localStorage.setItem(`comments-${filecode}`, JSON.stringify(updatedComments));
+    setCommentInput('');
+    setNameInput('');
+  };
+
   if (loading) return <LogoLoader />;
+
   if (error) {
     return (
       <div className="min-h-screen bg-gray-900">
@@ -191,9 +216,7 @@ const VideoPlayer = () => {
   const embedUrl = video.link || `https://gradehgplus.com/${filecode}`;
   const visibleVideos = videos.slice(0, showCount);
   const previewImage =
-    video.thumbnail ||
-    video.screenshot ||
-    `https://cdn.streamhg.com/snapshots/${filecode}.jpg`;
+    video.thumbnail || video.screenshot || `https://cdn.streamhg.com/snapshots/${filecode}.jpg`;
 
   return (
     <div className="min-h-screen bg-gray-900 pt-16 sm:pt-20">
@@ -210,9 +233,9 @@ const VideoPlayer = () => {
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 sm:gap-8">
           <div className="lg:col-span-2">
-            {/* ▶️ Video Player or Thumbnail */}
+            {/* Video Player */}
             <div className="relative bg-black rounded-lg overflow-hidden shadow-2xl mb-6">
-              <div className="relative w-full h-0 pb-[56.25%]">
+              <div className="relative w-full h-0 pb-[75%]">
                 {!showIframe ? (
                   <>
                     <img
@@ -243,7 +266,7 @@ const VideoPlayer = () => {
               </div>
             </div>
 
-            {/* 📄 Movie Info */}
+            {/* Movie Info */}
             <div className="mb-6">
               <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-white mb-4">
                 {tmdbData?.title || video.title || video.filename}
@@ -293,10 +316,62 @@ const VideoPlayer = () => {
                   </a>
                 )}
               </div>
+
+              {/* Comment Section */}
+              <div className="mt-8">
+                <h3 className="text-xl font-bold text-white mb-4">Comments</h3>
+
+                {/* Comment form with Name */}
+                <form 
+  onSubmit={handleAddComment} 
+  className="flex flex-col sm:flex-row gap-2 mb-6 border border-gray-700 p-4 rounded-xl bg-gray-900 shadow-md"
+>
+  <input
+    type="text"
+    placeholder="Your Name"
+    value={nameInput}
+    onChange={(e) => setNameInput(e.target.value)}
+    className="p-3 rounded-lg bg-gray-800 text-white outline-none border border-gray-600 w-full sm:w-1/4 focus:border-red-500 transition-colors"
+    required
+  />
+  <input
+    type="text"
+    placeholder="Write a comment..."
+    value={commentInput}
+    onChange={(e) => setCommentInput(e.target.value)}
+    className="flex-1 p-3 rounded-lg bg-gray-800 text-white outline-none border border-gray-600 focus:border-red-500 transition-colors"
+    required
+  />
+  <button
+    type="submit"
+    className="bg-red-500 hover:bg-red-600 text-white px-5 py-3 rounded-lg font-semibold transition-all shadow-md hover:shadow-lg"
+  >
+    Comment
+  </button>
+</form>
+
+{/* List of comments */}
+{comments.length === 0 ? (
+  <p className="text-gray-400 italic">No comments yet. Be the first to comment!</p>
+) : (
+  <div className="space-y-4 max-h-64 overflow-y-auto scrollbar-thin scrollbar-thumb-gray-700 scrollbar-track-gray-900">
+    {comments.map((c) => (
+      <div key={c.id} className="bg-gray-800 rounded-lg p-4 border border-gray-700 shadow-sm hover:shadow-md transition-shadow">
+        <div className="flex justify-between items-center mb-2">
+          <span className="text-sm font-semibold text-white">{c.user}</span>
+          <span className="text-xs text-gray-400">{c.date}</span>
+        </div>
+        <p className="text-gray-300">{c.text}</p>
+      </div>
+    ))}
+  </div>
+)}
+
+              </div>
             </div>
           </div>
 
-          {/* 🎬 Sidebar */}
+          {/* Sidebar */}
           <div className="lg:col-span-1">
             <div className="bg-gray-800/50 rounded-lg p-4 sm:p-6 sticky top-20 sm:top-24">
               <h2 className="text-lg sm:text-xl font-bold text-white mb-4 sm:mb-6 flex items-center space-x-2">
