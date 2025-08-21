@@ -323,49 +323,49 @@ const VideoPlayer = () => {
 
                 {/* Comment form with Name */}
                 <form 
-  onSubmit={handleAddComment} 
-  className="flex flex-col sm:flex-row gap-2 mb-6 border border-gray-700 p-4 rounded-xl bg-gray-900 shadow-md"
->
-  <input
-    type="text"
-    placeholder="Your Name"
-    value={nameInput}
-    onChange={(e) => setNameInput(e.target.value)}
-    className="p-3 rounded-lg bg-gray-800 text-white outline-none border border-gray-600 w-full sm:w-1/4 focus:border-red-500 transition-colors"
-    required
-  />
-  <input
-    type="text"
-    placeholder="Write a comment..."
-    value={commentInput}
-    onChange={(e) => setCommentInput(e.target.value)}
-    className="flex-1 p-3 rounded-lg bg-gray-800 text-white outline-none border border-gray-600 focus:border-red-500 transition-colors"
-    required
-  />
-  <button
-    type="submit"
-    className="bg-red-500 hover:bg-red-600 text-white px-5 py-3 rounded-lg font-semibold transition-all shadow-md hover:shadow-lg"
-  >
-    Comment
-  </button>
-</form>
+                    onSubmit={handleAddComment} 
+                    className="flex flex-col sm:flex-row gap-2 mb-6 border border-gray-700 p-4 rounded-xl bg-gray-900 shadow-md"
+                  >
+                    <input
+                      type="text"
+                      placeholder="Your Name"
+                      value={nameInput}
+                      onChange={(e) => setNameInput(e.target.value)}
+                      className="p-3 rounded-lg bg-gray-800 text-white outline-none border border-gray-600 w-full sm:w-1/4 focus:border-red-500 transition-colors"
+                      required
+                    />
+                    <input
+                      type="text"
+                      placeholder="Write a comment..."
+                      value={commentInput}
+                      onChange={(e) => setCommentInput(e.target.value)}
+                      className="flex-1 p-3 rounded-lg bg-gray-800 text-white outline-none border border-gray-600 focus:border-red-500 transition-colors"
+                      required
+                    />
+                    <button
+                      type="submit"
+                      className="bg-red-500 hover:bg-red-600 text-white px-5 py-3 rounded-lg font-semibold transition-all shadow-md hover:shadow-lg"
+                    >
+                      Comment
+                    </button>
+                  </form>
 
-{/* List of comments */}
-{comments.length === 0 ? (
-  <p className="text-gray-400 italic">No comments yet. Be the first to comment!</p>
-) : (
-  <div className="space-y-4 max-h-64 overflow-y-auto scrollbar-thin scrollbar-thumb-gray-700 scrollbar-track-gray-900">
-    {comments.map((c) => (
-      <div key={c.id} className="bg-gray-800 rounded-lg p-4 border border-gray-700 shadow-sm hover:shadow-md transition-shadow">
-        <div className="flex justify-between items-center mb-2">
-          <span className="text-sm font-semibold text-white">{c.user}</span>
-          <span className="text-xs text-gray-400">{c.date}</span>
-        </div>
-        <p className="text-gray-300">{c.text}</p>
-      </div>
-    ))}
-  </div>
-)}
+                  {/* List of comments */}
+                  {comments.length === 0 ? (
+                    <p className="text-gray-400 italic">No comments yet. Be the first to comment!</p>
+                  ) : (
+                    <div className="space-y-4 max-h-64 overflow-y-auto scrollbar-thin scrollbar-thumb-gray-700 scrollbar-track-gray-900">
+                      {comments.map((c) => (
+                        <div key={c.id} className="bg-gray-800 rounded-lg p-4 border border-gray-700 shadow-sm hover:shadow-md transition-shadow">
+                          <div className="flex justify-between items-center mb-2">
+                            <span className="text-sm font-semibold text-white">{c.user}</span>
+                            <span className="text-xs text-gray-400">{c.date}</span>
+                          </div>
+                          <p className="text-gray-300">{c.text}</p>
+                        </div>
+                      ))}
+                    </div>
+                  )}
 
               </div>
             </div>

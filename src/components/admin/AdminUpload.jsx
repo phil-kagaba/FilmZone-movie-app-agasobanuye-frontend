@@ -1,5 +1,4 @@
-
-
+import { LogOut } from "lucide-react";
 import React, { useState } from 'react';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
@@ -98,6 +97,14 @@ const AdminUpload = () => {
   {/* Main Content */}
   <main className="flex-1 p-8 overflow-y-auto">
     <div className="max-w-3xl mx-auto bg-gray-900 p-6 rounded-2xl shadow-lg space-y-8">
+      <a
+  href="/"
+  className="bg-red-600 hover:bg-red-500 text-white font-semibold px-5 py-2 rounded-lg border border-red-700 shadow-md hover:shadow-lg transition-all flex items-center gap-2"
+>
+  <LogOut size={18} />
+  Logout
+</a>
+
 
       {/* Upload Video */}
       <section>
