@@ -8,6 +8,7 @@ import Footer from './components/Footer';
 import MyMovieApis from './components/MyMovieApis';
 import NotFound from './components/NotFound';
 import LoginPage from './components/admin/LoginPage';
+import EditFileTitle from './components/admin/EditFileTitle';
 
 function App() {
   return (
@@ -22,6 +23,7 @@ function App() {
             <Route path="/trailer" element={<MyMovieApis />} />
             <Route path="*" element={<NotFound />} />
             <Route path='/AdminLoginPage' element= {<LoginPage /> }/>
+            <Route path='/edit' element = {<EditFileTitle />} />
           </Routes>
         </div>
         <Footer />
